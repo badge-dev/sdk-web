@@ -24,8 +24,10 @@ import {useEffect, useRef, useState} from "react";
 interface Settings {
   apiKey: string;
   templateId: string | null;
+  embedType: "fullEmbed" | "templateEditor";
   permissions: string[];
   features: Required<badge.TemplateEmbedFeatures>;
+  editorFeatures: badge.TemplateEditorFeatures;
   sdkPath: string;
   googleFont: string;
   primaryColor: string;
@@ -54,7 +56,10 @@ export function Playground() {
 
   const [sdkCall, setSdkCall] = useState<{
     sdkOptions: badge.SdkOptions;
-    embedTemplatePageOptions: badge.EmbedTemplatePageOptions;
+    options:
+      | badge.EmbedTemplatePageOptions
+      | badge.EmbedTemplateEditorPageOptions;
+    functionName: string;
   }>();
 
   function launchEmbed() {
@@ -95,31 +100,50 @@ export function Playground() {
         const primaryColor = settings.primaryColor || undefined;
         const neutralColor = settings.neutralColor || undefined;
 
-        const embedTemplatePageOptions: badge.EmbedTemplatePageOptions = {
-          templateId,
-          features: settings.features,
-          fonts: googleFont
-            ? [
-                {
-                  cssSrc: `https://fonts.googleapis.com/css2?family=${googleFont.replace(/ /g, "+")}&display=swap`,
-                },
-              ]
-            : undefined,
-          appearance: {
-            fontFamily: googleFont,
-            colors: {
-              primary: primaryColor,
-              neutral: neutralColor,
-            },
+        const fonts = googleFont
+          ? [
+              {
+                cssSrc: `https://fonts.googleapis.com/css2?family=${googleFont.replace(/ /g, "+")}&display=swap`,
+              },
+            ]
+          : undefined;
+
+        const appearance = {
+          fontFamily: googleFont,
+          colors: {
+            primary: primaryColor,
+            neutral: neutralColor,
           },
         };
 
-        badge.embedTemplatePage(sdk, element, embedTemplatePageOptions);
-
-        setSdkCall({
-          sdkOptions,
-          embedTemplatePageOptions,
-        });
+        if (settings.embedType === "templateEditor") {
+          const options: badge.EmbedTemplateEditorPageOptions = {
+            templateId,
+            features:
+              settings.editorFeatures ?? badge.TEMPLATE_EDITOR_FEATURES_DEFAULT,
+            fonts,
+            appearance,
+          };
+          badge.embedTemplateEditorPage(sdk, element, options);
+          setSdkCall({
+            sdkOptions,
+            options,
+            functionName: "embedTemplateEditorPage",
+          });
+        } else {
+          const options: badge.EmbedTemplatePageOptions = {
+            templateId,
+            features: settings.features,
+            fonts,
+            appearance,
+          };
+          badge.embedTemplatePage(sdk, element, options);
+          setSdkCall({
+            sdkOptions,
+            options,
+            functionName: "embedTemplatePage",
+          });
+        }
       })
       .catch(alert);
   }
@@ -193,27 +217,61 @@ export function Playground() {
               settingChanged("templateId", value);
             }}
           />
+          <Select
+            label="Embed Type"
+            defaultValue={settings.embedType}
+            data={[
+              {value: "fullEmbed", label: "Full Embed"},
+              {value: "templateEditor", label: "Template Editor"},
+            ]}
+            value={settings.embedType}
+            onChange={(value) => {
+              settingChanged("embedType", value as Settings["embedType"]);
+            }}
+          />
           <MultiSelect
             label="Permissions"
-            data={ALL_PERMISSIONS}
+            data={
+              settings.embedType === "fullEmbed"
+                ? ALL_PERMISSIONS
+                : ALL_PERMISSIONS_TEMPLATE_EDITOR
+            }
             value={settings.permissions}
             onChange={(value) => {
               settingChanged("permissions", value);
             }}
           />
-          <MultiSelect
-            label="Features"
-            data={Object.keys(ALL_FEATURES_DISABLED)}
-            value={Object.entries(settings.features)
-              .filter(([_, value]) => value)
-              .map(([key]) => key)}
-            onChange={(value) => {
-              settingChanged("features", {
-                ...ALL_FEATURES_DISABLED,
-                ...Object.fromEntries(value.map((flag) => [flag, true])),
-              });
-            }}
-          />
+          {settings.embedType === "fullEmbed" ? (
+            <MultiSelect
+              label="Features"
+              data={Object.keys(ALL_FEATURES_DISABLED)}
+              value={Object.entries(settings.features)
+                .filter(([_, value]) => value)
+                .map(([key]) => key)}
+              onChange={(value) => {
+                settingChanged("features", {
+                  ...ALL_FEATURES_DISABLED,
+                  ...Object.fromEntries(value.map((flag) => [flag, true])),
+                });
+              }}
+            />
+          ) : (
+            <MultiSelect
+              label="Editor Features"
+              data={Object.keys(badge.TEMPLATE_EDITOR_FEATURES_DEFAULT)}
+              value={Object.entries(
+                settings.editorFeatures ??
+                  badge.TEMPLATE_EDITOR_FEATURES_DEFAULT,
+              )
+                .filter(([_, value]) => value)
+                .map(([key]) => key)}
+              onChange={(value) => {
+                const editorFeatures: badge.TemplateEditorFeatures =
+                  Object.fromEntries(value.map((flag) => [flag, true]));
+                settingChanged("editorFeatures", editorFeatures);
+              }}
+            />
+          )}
           <Switch
             label="Show Appearance Settings"
             checked={appearanceVisible}
@@ -277,7 +335,7 @@ export function Playground() {
               <Code block>{`
 const sdk = badge.makeSdk(${JSON.stringify(sdkCall.sdkOptions, null, 2)});
 
-badge.embedTemplatePage(sdk, element, ${JSON.stringify(sdkCall.embedTemplatePageOptions, null, 2)});`}</Code>
+badge.${sdkCall.functionName}(sdk, element, ${JSON.stringify(sdkCall.options, null, 2)});`}</Code>
             </>
           )}
         </Stack>
@@ -295,6 +353,7 @@ badge.embedTemplatePage(sdk, element, ${JSON.stringify(sdkCall.embedTemplatePage
 const DEFAULT_SETTINGS: Settings = {
   apiKey: "",
   templateId: null,
+  embedType: "fullEmbed",
   permissions: [
     "workspace:read",
     "user:write",
@@ -307,6 +366,7 @@ const DEFAULT_SETTINGS: Settings = {
     campaigns: true,
     campaignEditor: true,
   },
+  editorFeatures: {...badge.TEMPLATE_EDITOR_FEATURES_DEFAULT},
   sdkPath: "",
   googleFont: "",
   primaryColor: "",
@@ -330,6 +390,15 @@ const ALL_PERMISSIONS = [
   "pass:write",
   "campaign:read",
   "campaign:write",
+  "user:read",
+  "user:write",
+];
+
+const ALL_PERMISSIONS_TEMPLATE_EDITOR = [
+  "workspace:read",
+  "workspace:write",
+  "template:read",
+  "template:write",
   "user:read",
   "user:write",
 ];
