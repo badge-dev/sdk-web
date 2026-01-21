@@ -1,5 +1,5 @@
 import {z} from "@zod/mini";
-import {sdkPermissionSchema} from "./permissions";
+import {sdkPermissionSchema} from "./permissions.ts";
 
 export function parseTokenPayload(token: string): SdkTokenPayload {
   const tokenPayloadResult = sdkTokenPayloadSchema.safeParse(

@@ -1,6 +1,5 @@
 import type {BadgeSdk} from "../sdk.ts";
-import type {AppearanceConfig} from "../helpers/appearance.ts";
-import type {FontSource} from "../helpers/appearance.ts";
+import type {AppearanceConfig, FontSource} from "../helpers/appearance.ts";
 import {createEmbedIframe} from "../utils/iframe.ts";
 import {validatePermissions} from "../helpers/permissions.ts";
 import {parseTokenPayload} from "../helpers/token.ts";
