@@ -24,7 +24,7 @@ import {useEffect, useRef, useState} from "react";
 interface Settings {
   apiKey: string;
   templateId: string | null;
-  embedType: "fullEmbed" | "templateEditor";
+  embedType: "templateDetails" | "templateEditor";
   permissions: string[];
   features: Required<badge.TemplateEmbedFeatures>;
   editorFeatures: badge.TemplateEditorFeatures;
@@ -221,7 +221,7 @@ export function Playground() {
             label="Embed Type"
             defaultValue={settings.embedType}
             data={[
-              {value: "fullEmbed", label: "Full Embed"},
+              {value: "templateDetails", label: "Template Details"},
               {value: "templateEditor", label: "Template Editor"},
             ]}
             value={settings.embedType}
@@ -232,16 +232,17 @@ export function Playground() {
           <MultiSelect
             label="Permissions"
             data={
-              settings.embedType === "fullEmbed"
-                ? ALL_PERMISSIONS
-                : ALL_PERMISSIONS_TEMPLATE_EDITOR
+              {
+                templateDetails: ALL_PERMISSIONS,
+                templateEditor: ALL_PERMISSIONS_TEMPLATE_EDITOR,
+              }[settings.embedType]
             }
             value={settings.permissions}
             onChange={(value) => {
               settingChanged("permissions", value);
             }}
           />
-          {settings.embedType === "fullEmbed" ? (
+          {settings.embedType === "templateDetails" ? (
             <MultiSelect
               label="Features"
               data={Object.keys(ALL_FEATURES_DISABLED)}
@@ -353,7 +354,7 @@ badge.${sdkCall.functionName}(sdk, element, ${JSON.stringify(sdkCall.options, nu
 const DEFAULT_SETTINGS: Settings = {
   apiKey: "",
   templateId: null,
-  embedType: "fullEmbed",
+  embedType: "templateDetails",
   permissions: [
     "workspace:read",
     "user:write",

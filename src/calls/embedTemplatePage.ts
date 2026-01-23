@@ -7,6 +7,7 @@ import {
   validatePermissions,
   type SdkPermission,
 } from "../helpers/permissions.ts";
+import type {TemplateEmbedFeatures} from "../helpers/embedFeatures.ts";
 
 export interface EmbedTemplatePageOptions {
   /**
@@ -39,19 +40,6 @@ export function embedTemplatePage(
   });
 
   element.replaceChildren(iframe);
-}
-
-export interface TemplateEmbedConfig {
-  features?: TemplateEmbedFeatures | undefined;
-  fonts?: FontSource[] | undefined;
-  appearance?: AppearanceConfig | undefined;
-}
-
-export interface TemplateEmbedFeatures {
-  passList?: boolean;
-  templateEditor?: boolean;
-  campaigns?: boolean;
-  campaignEditor?: boolean;
 }
 
 function validatePermissionsByFeatures(

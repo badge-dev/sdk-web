@@ -1,11 +1,15 @@
-import type {TemplateEditorConfig} from "../calls/embedTemplateEditorPage";
-import type {TemplateEmbedConfig} from "../calls/embedTemplatePage";
+import type {TemplateEmbedFeatures} from "../helpers/embedFeatures.ts";
+import type {FontSource, AppearanceConfig} from "../helpers/appearance";
 
 interface CreateIframeOptions {
   token: string;
   path: string;
   pathHash: string;
-  config: TemplateEmbedConfig | TemplateEditorConfig;
+  config: {
+    features?: TemplateEmbedFeatures | undefined;
+    fonts?: FontSource[] | undefined;
+    appearance?: AppearanceConfig | undefined;
+  };
 }
 
 export function createEmbedIframe(
