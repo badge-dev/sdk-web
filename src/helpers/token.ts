@@ -14,7 +14,7 @@ export function parseTokenPayload(token: string): SdkTokenPayload {
 }
 
 export type SdkTokenPayload = z.infer<typeof sdkTokenPayloadSchema>;
-const sdkTokenPayloadSchema = z.object({
+export const sdkTokenPayloadSchema = z.object({
   workspaceHandle: z.string(),
   permissions: z.array(sdkPermissionSchema),
 });

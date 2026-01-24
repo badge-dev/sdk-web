@@ -116,33 +116,39 @@ export function Playground() {
           },
         };
 
-        if (settings.embedType === "templateEditor") {
-          const options: badge.EmbedTemplateEditorPageOptions = {
-            templateId,
-            features:
-              settings.editorFeatures ?? badge.TEMPLATE_EDITOR_FEATURES_DEFAULT,
-            fonts,
-            appearance,
-          };
-          badge.embedTemplateEditorPage(sdk, element, options);
-          setSdkCall({
-            sdkOptions,
-            options,
-            functionName: "embedTemplateEditorPage",
-          });
-        } else {
-          const options: badge.EmbedTemplatePageOptions = {
-            templateId,
-            features: settings.features,
-            fonts,
-            appearance,
-          };
-          badge.embedTemplatePage(sdk, element, options);
-          setSdkCall({
-            sdkOptions,
-            options,
-            functionName: "embedTemplatePage",
-          });
+        switch (settings.embedType) {
+          case "templateEditor": {
+            const options: badge.EmbedTemplateEditorPageOptions = {
+              templateId,
+              features:
+                settings.editorFeatures ??
+                badge.TEMPLATE_EDITOR_FEATURES_DEFAULT,
+              fonts,
+              appearance,
+            };
+            badge.embedTemplateEditorPage(sdk, element, options);
+            setSdkCall({
+              sdkOptions,
+              options,
+              functionName: "embedTemplateEditorPage",
+            });
+            return;
+          }
+          case "templateDetails": {
+            const options: badge.EmbedTemplatePageOptions = {
+              templateId,
+              features: settings.features,
+              fonts,
+              appearance,
+            };
+            badge.embedTemplatePage(sdk, element, options);
+            setSdkCall({
+              sdkOptions,
+              options,
+              functionName: "embedTemplatePage",
+            });
+            return;
+          }
         }
       })
       .catch(alert);
@@ -231,18 +237,13 @@ export function Playground() {
           />
           <MultiSelect
             label="Permissions"
-            data={
-              {
-                templateDetails: ALL_PERMISSIONS,
-                templateEditor: ALL_PERMISSIONS_TEMPLATE_EDITOR,
-              }[settings.embedType]
-            }
+            data={ALL_PERMISSIONS}
             value={settings.permissions}
             onChange={(value) => {
               settingChanged("permissions", value);
             }}
           />
-          {settings.embedType === "templateDetails" ? (
+          {settings.embedType === "templateDetails" && (
             <MultiSelect
               label="Features"
               data={Object.keys(ALL_FEATURES_DISABLED)}
@@ -256,7 +257,8 @@ export function Playground() {
                 });
               }}
             />
-          ) : (
+          )}
+          {settings.embedType === "templateEditor" && (
             <MultiSelect
               label="Editor Features"
               data={Object.keys(badge.TEMPLATE_EDITOR_FEATURES_DEFAULT)}
@@ -367,7 +369,7 @@ const DEFAULT_SETTINGS: Settings = {
     campaigns: true,
     campaignEditor: true,
   },
-  editorFeatures: {...badge.TEMPLATE_EDITOR_FEATURES_DEFAULT},
+  editorFeatures: badge.TEMPLATE_EDITOR_FEATURES_DEFAULT,
   sdkPath: "",
   googleFont: "",
   primaryColor: "",
@@ -391,15 +393,6 @@ const ALL_PERMISSIONS = [
   "pass:write",
   "campaign:read",
   "campaign:write",
-  "user:read",
-  "user:write",
-];
-
-const ALL_PERMISSIONS_TEMPLATE_EDITOR = [
-  "workspace:read",
-  "workspace:write",
-  "template:read",
-  "template:write",
   "user:read",
   "user:write",
 ];

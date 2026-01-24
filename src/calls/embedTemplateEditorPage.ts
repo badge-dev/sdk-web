@@ -4,11 +4,7 @@ import {createEmbedIframe} from "../utils/iframe.ts";
 import {validatePermissions} from "../helpers/permissions.ts";
 import {parseTokenPayload} from "../helpers/token.ts";
 import {type SdkPermission} from "../helpers/permissions.ts";
-import {
-  type TemplateEditorFeatures,
-  TEMPLATE_EDITOR_FEATURES_NONE,
-  TEMPLATE_EDITOR_FEATURES_DEFAULT,
-} from "../helpers/embedFeatures.ts";
+import {type TemplateEditorFeatures} from "../helpers/embedFeatures.ts";
 
 export interface EmbedTemplateEditorPageOptions {
   /**
@@ -21,7 +17,7 @@ export interface EmbedTemplateEditorPageOptions {
 }
 
 /**
- * requires template:read
+ * requires template:write
  */
 export function embedTemplateEditorPage(
   sdk: BadgeSdk,
@@ -36,6 +32,7 @@ export function embedTemplateEditorPage(
     token: sdk.token,
     path: sdk.path,
     pathHash: `/${workspaceHandle}/templates/${templateId}/edit`,
+    embedType: "templateEditor",
     config: {
       features: {
         templateEditor:
@@ -54,5 +51,73 @@ export function embedTemplateEditorPage(
 const REQUIRED_PERMISSIONS: SdkPermission[][] = [
   ["workspace:read", "workspace:write"],
   ["user:read", "user:write"],
-  ["template:write", "template:read"],
+  ["template:write"],
 ];
+
+export const TEMPLATE_EDITOR_FEATURES_DEFAULT = {
+  logo: true,
+  icon: true,
+  heading: true,
+  colors: true,
+  coverImage: true,
+  headerField: true,
+  secondaryFields: true,
+  barcodeType: false,
+  barcodeData: false,
+  barcodeText: false,
+  description: false,
+  backFields: true,
+  locationMessages: true,
+  appLinks: true,
+  expiry: false,
+} satisfies Record<keyof TemplateEditorFeatures, true | false>;
+
+export const TEMPLATE_EDITOR_FEATURES_ALL: Record<
+  keyof TemplateEditorFeatures,
+  true
+> = {
+  logo: true,
+  icon: true,
+  heading: true,
+  colors: true,
+  coverImage: true,
+  headerField: true,
+  secondaryFields: true,
+  barcodeType: true,
+  barcodeData: true,
+  barcodeText: true,
+  description: true,
+  backFields: true,
+  locationMessages: true,
+  appLinks: true,
+  expiry: true,
+};
+
+export const TEMPLATE_EDITOR_FEATURES_NONE: Record<
+  keyof TemplateEditorFeatures,
+  false
+> = {
+  logo: false,
+  icon: false,
+  heading: false,
+  colors: false,
+  coverImage: false,
+  headerField: false,
+  secondaryFields: false,
+  barcodeType: false,
+  barcodeData: false,
+  barcodeText: false,
+  description: false,
+  backFields: false,
+  locationMessages: false,
+  appLinks: false,
+  expiry: false,
+};
+
+export const TEMPLATE_EDITOR_FEATURES_ENABLE_BARCODE: Partial<
+  Record<keyof TemplateEditorFeatures, true>
+> = {
+  barcodeType: true,
+  barcodeData: true,
+  barcodeText: true,
+};
