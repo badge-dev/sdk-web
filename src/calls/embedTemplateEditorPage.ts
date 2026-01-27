@@ -4,7 +4,10 @@ import {createEmbedIframe} from "../utils/iframe.ts";
 import {validatePermissions} from "../helpers/permissions.ts";
 import {parseTokenPayload} from "../helpers/token.ts";
 import {type SdkPermission} from "../helpers/permissions.ts";
-import {type TemplateEditorFeatures} from "../helpers/embedFeatures.ts";
+import {
+  type TemplateEditorFeature,
+  type TemplateEditorFeatures,
+} from "../helpers/embedFeatures.ts";
 
 export interface EmbedTemplateEditorPageOptions {
   /**
@@ -70,54 +73,21 @@ export const TEMPLATE_EDITOR_FEATURES_DEFAULT = {
   locationMessages: true,
   appLinks: true,
   expiry: false,
-} satisfies Record<keyof TemplateEditorFeatures, true | false>;
+} satisfies Required<TemplateEditorFeatures>;
 
-export const TEMPLATE_EDITOR_FEATURES_ALL: Record<
-  keyof TemplateEditorFeatures,
-  true
-> = {
-  logo: true,
-  icon: true,
-  heading: true,
-  colors: true,
-  coverImage: true,
-  headerField: true,
-  secondaryFields: true,
+export const TEMPLATE_EDITOR_FEATURES_NONE = Object.fromEntries(
+  Object.keys(TEMPLATE_EDITOR_FEATURES_DEFAULT).map((key) => [key, false]),
+) as Record<TemplateEditorFeature, false>;
+
+export const TEMPLATE_EDITOR_FEATURES_ALL = Object.fromEntries(
+  Object.keys(TEMPLATE_EDITOR_FEATURES_DEFAULT).map((key) => [key, true]),
+) as Record<TemplateEditorFeature, true>;
+
+export const TEMPLATE_EDITOR_FEATURES_ENABLE_BARCODE = {
   barcodeType: true,
   barcodeData: true,
   barcodeText: true,
-  description: true,
-  backFields: true,
-  locationMessages: true,
-  appLinks: true,
-  expiry: true,
-};
-
-export const TEMPLATE_EDITOR_FEATURES_NONE: Record<
-  keyof TemplateEditorFeatures,
-  false
-> = {
-  logo: false,
-  icon: false,
-  heading: false,
-  colors: false,
-  coverImage: false,
-  headerField: false,
-  secondaryFields: false,
-  barcodeType: false,
-  barcodeData: false,
-  barcodeText: false,
-  description: false,
-  backFields: false,
-  locationMessages: false,
-  appLinks: false,
-  expiry: false,
-};
-
-export const TEMPLATE_EDITOR_FEATURES_ENABLE_BARCODE: Partial<
-  Record<keyof TemplateEditorFeatures, true>
-> = {
-  barcodeType: true,
-  barcodeData: true,
-  barcodeText: true,
-};
+} satisfies Pick<
+  Record<TemplateEditorFeature, true>,
+  "barcodeType" | "barcodeData" | "barcodeText"
+>;

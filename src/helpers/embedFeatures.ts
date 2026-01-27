@@ -7,6 +7,8 @@ export interface TemplateEmbedFeatures {
   campaignEditor?: boolean;
 }
 
+export type TemplateEditorFeature = keyof TemplateEditorFeatures;
+
 export interface TemplateEditorFeatures {
   logo?: boolean;
   icon?: boolean;
