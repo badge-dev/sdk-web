@@ -36,7 +36,7 @@ export function embedTemplatePage(
     token: sdk.token,
     path: sdk.path,
     pathHash: `/${workspaceHandle}/templates/${templateId}/overview`,
-    embedType: "templateDetails",
+    navigation: "top",
     config: {features, fonts, appearance},
   });
 

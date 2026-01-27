@@ -32,7 +32,7 @@ export function embedTemplateEditorPage(
     token: sdk.token,
     path: sdk.path,
     pathHash: `/${workspaceHandle}/templates/${templateId}/edit`,
-    embedType: "templateEditor",
+    navigation: "bottom",
     config: {
       features: {
         templateEditor:

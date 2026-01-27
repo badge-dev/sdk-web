@@ -1,4 +1,4 @@
-export type EmbedType = "templateDetails" | "templateEditor";
+export type Navigation = "top" | "bottom";
 
 export interface TemplateEmbedFeatures {
   passList?: boolean;
