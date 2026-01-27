@@ -1,6 +1,6 @@
 import type {BadgeSdk} from "../sdk.ts";
 import type {FontSource, AppearanceConfig} from "../helpers/appearance.ts";
-import {createEmbedIframe} from "../utils/iframe.ts";
+import {createEmbedIframe} from "../helpers/iframe.ts";
 import {parseTokenPayload} from "../helpers/token.ts";
 import {
   hasPermission,

@@ -1,6 +1,6 @@
 import type {BadgeSdk} from "../sdk.ts";
 import type {AppearanceConfig, FontSource} from "../helpers/appearance.ts";
-import {createEmbedIframe} from "../utils/iframe.ts";
+import {createEmbedIframe} from "../helpers/iframe.ts";
 import {validatePermissions} from "../helpers/permissions.ts";
 import {parseTokenPayload} from "../helpers/token.ts";
 import {type SdkPermission} from "../helpers/permissions.ts";
@@ -54,7 +54,7 @@ export function embedTemplateEditorPage(
 const REQUIRED_PERMISSIONS: SdkPermission[][] = [
   ["workspace:read", "workspace:write"],
   ["user:read", "user:write"],
-  ["template:write"],
+  ["template:write", "template:read"],
 ];
 
 export const TEMPLATE_EDITOR_FEATURES_DEFAULT = {

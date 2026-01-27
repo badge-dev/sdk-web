@@ -24,10 +24,10 @@ import {useEffect, useRef, useState} from "react";
 interface Settings {
   apiKey: string;
   templateId: string | null;
-  embedType: "templateDetails" | "templateEditor";
+  embedType?: "templateDetails" | "templateEditor";
   permissions: string[];
   features: Required<badge.TemplateEmbedFeatures>;
-  editorFeatures: badge.TemplateEditorFeatures;
+  editorFeatures?: badge.TemplateEditorFeatures;
   sdkPath: string;
   googleFont: string;
   primaryColor: string;
@@ -43,9 +43,21 @@ export function Playground() {
     key: "state",
     defaultValue: DEFAULT_SETTINGS,
     serialize: JSON.stringify,
-    deserialize: JSON.parse as (
-      value: string | undefined,
-    ) => typeof DEFAULT_SETTINGS,
+    deserialize: (value: string | undefined): Settings => {
+      if (!value) {
+        return DEFAULT_SETTINGS;
+      }
+
+      const parsed = JSON.parse(value) as Partial<Settings>;
+
+      return {
+        ...DEFAULT_SETTINGS,
+        ...parsed,
+        embedType: parsed.embedType ?? "templateDetails",
+        editorFeatures:
+          parsed.editorFeatures ?? badge.TEMPLATE_EDITOR_FEATURES_DEFAULT,
+      };
+    },
     getInitialValueInEffect: false,
   });
 
@@ -116,7 +128,8 @@ export function Playground() {
           },
         };
 
-        switch (settings.embedType) {
+        const embedType = settings.embedType ?? "templateDetails";
+        switch (embedType) {
           case "templateEditor": {
             const options: badge.EmbedTemplateEditorPageOptions = {
               templateId,
@@ -190,6 +203,7 @@ export function Playground() {
     handleApiKeyChange(settings.apiKey);
   }, [handleApiKeyChange, settings.apiKey]);
 
+  const embedType = settings.embedType ?? "templateDetails";
   return (
     <AppShell
       header={{height: 60}}
@@ -225,12 +239,12 @@ export function Playground() {
           />
           <Select
             label="Embed Type"
-            defaultValue={settings.embedType}
+            defaultValue={embedType}
             data={[
               {value: "templateDetails", label: "Template Details"},
               {value: "templateEditor", label: "Template Editor"},
             ]}
-            value={settings.embedType}
+            value={embedType}
             onChange={(value) => {
               settingChanged("embedType", value as Settings["embedType"]);
             }}
@@ -243,7 +257,7 @@ export function Playground() {
               settingChanged("permissions", value);
             }}
           />
-          {settings.embedType === "templateDetails" && (
+          {embedType === "templateDetails" && (
             <MultiSelect
               label="Features"
               data={Object.keys(ALL_FEATURES_DISABLED)}
@@ -258,7 +272,7 @@ export function Playground() {
               }}
             />
           )}
-          {settings.embedType === "templateEditor" && (
+          {embedType === "templateEditor" && (
             <MultiSelect
               label="Editor Features"
               data={Object.keys(badge.TEMPLATE_EDITOR_FEATURES_DEFAULT)}

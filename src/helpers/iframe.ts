@@ -1,8 +1,5 @@
-import type {
-  Navigation,
-  TemplateEmbedFeatures,
-} from "../helpers/embedFeatures.ts";
-import type {FontSource, AppearanceConfig} from "../helpers/appearance";
+import type {Navigation, TemplateEmbedFeatures} from "./embedFeatures.ts";
+import type {FontSource, AppearanceConfig} from "./appearance.ts";
 
 export interface CreateIframeOptions {
   token: string;
