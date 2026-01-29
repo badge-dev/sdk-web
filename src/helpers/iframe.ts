@@ -33,6 +33,7 @@ export function createEmbedIframe(
   iframeUrl.hash = pathHash;
 
   iframe.src = iframeUrl.toString();
+  iframe.allow = `clipboard-write ${iframeUrl.origin}`;
 
   return iframe;
 }
