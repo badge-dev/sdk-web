@@ -24,7 +24,7 @@ import {useEffect, useRef, useState} from "react";
 interface Settings {
   apiKey: string;
   templateId: string | null;
-  embedType?: "templateDetails" | "templateEditor";
+  sdkFunction: SdkFunction;
   permissions: string[];
   features: Required<badge.TemplateEmbedFeatures>;
   editorFeatures?: badge.TemplateEditorFeatures;
@@ -34,6 +34,8 @@ interface Settings {
   neutralColor: string;
   apiUrl: string;
 }
+
+type SdkFunction = "embedTemplatePage" | "embedTemplateEditorPage";
 
 export function Playground() {
   const ref = useRef<HTMLDivElement>(null);
@@ -53,7 +55,6 @@ export function Playground() {
       return {
         ...DEFAULT_SETTINGS,
         ...parsed,
-        embedType: parsed.embedType ?? "templateDetails",
         editorFeatures:
           parsed.editorFeatures ?? badge.TEMPLATE_EDITOR_FEATURES_DEFAULT,
       };
@@ -71,7 +72,7 @@ export function Playground() {
     options:
       | badge.EmbedTemplatePageOptions
       | badge.EmbedTemplateEditorPageOptions;
-    functionName: string;
+    functionName: SdkFunction;
   }>();
 
   function launchEmbed() {
@@ -101,7 +102,7 @@ export function Playground() {
     })
       .then((res) => res.json())
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .then((data: any) => {
+      .then((data: any): void => {
         const sdkOptions: badge.SdkOptions = {
           token: data.token,
           path: settings.sdkPath || undefined,
@@ -128,9 +129,9 @@ export function Playground() {
           },
         };
 
-        const embedType = settings.embedType ?? "templateDetails";
-        switch (embedType) {
-          case "templateEditor": {
+        const sdkCall = settings.sdkFunction;
+        switch (sdkCall) {
+          case "embedTemplateEditorPage": {
             const options: badge.EmbedTemplateEditorPageOptions = {
               templateId,
               features:
@@ -147,7 +148,7 @@ export function Playground() {
             });
             return;
           }
-          case "templateDetails": {
+          case "embedTemplatePage": {
             const options: badge.EmbedTemplatePageOptions = {
               templateId,
               features: settings.features,
@@ -161,6 +162,10 @@ export function Playground() {
               functionName: "embedTemplatePage",
             });
             return;
+          }
+          default: {
+            const _exhaustiveCheck: never = sdkCall;
+            return _exhaustiveCheck;
           }
         }
       })
@@ -203,7 +208,7 @@ export function Playground() {
     handleApiKeyChange(settings.apiKey);
   }, [handleApiKeyChange, settings.apiKey]);
 
-  const embedType = settings.embedType ?? "templateDetails";
+  const sdkFunction = settings.sdkFunction;
   return (
     <AppShell
       header={{height: 60}}
@@ -238,15 +243,12 @@ export function Playground() {
             }}
           />
           <Select
-            label="Embed Type"
-            defaultValue={embedType}
-            data={[
-              {value: "templateDetails", label: "Template Details"},
-              {value: "templateEditor", label: "Template Editor"},
-            ]}
-            value={embedType}
+            label="SDK Function"
+            defaultValue={sdkFunction}
+            data={["embedTemplatePage", "embedTemplateEditorPage"]}
+            value={sdkFunction}
             onChange={(value) => {
-              settingChanged("embedType", value as Settings["embedType"]);
+              settingChanged("sdkFunction", value as SdkFunction);
             }}
           />
           <MultiSelect
@@ -257,7 +259,7 @@ export function Playground() {
               settingChanged("permissions", value);
             }}
           />
-          {embedType === "templateDetails" && (
+          {sdkFunction === "embedTemplatePage" && (
             <MultiSelect
               label="Features"
               data={Object.keys(ALL_FEATURES_DISABLED)}
@@ -272,7 +274,7 @@ export function Playground() {
               }}
             />
           )}
-          {embedType === "templateEditor" && (
+          {sdkFunction === "embedTemplateEditorPage" && (
             <MultiSelect
               label="Editor Features"
               data={Object.keys(badge.TEMPLATE_EDITOR_FEATURES_DEFAULT)}
@@ -370,7 +372,7 @@ badge.${sdkCall.functionName}(sdk, element, ${JSON.stringify(sdkCall.options, nu
 const DEFAULT_SETTINGS: Settings = {
   apiKey: "",
   templateId: null,
-  embedType: "templateDetails",
+  sdkFunction: "embedTemplatePage",
   permissions: [
     "workspace:read",
     "user:write",
