@@ -1,5 +1,17 @@
 # Changelog
 
+# [0.3.0](https://github.com/storr/sdk-web/compare/0.2.0...0.3.0) (2026-02-02)
+
+
+### Bug Fixes
+
+* added clipboard write permission ([#14](https://github.com/storr/sdk-web/issues/14)) ([d221c2b](https://github.com/storr/sdk-web/commit/d221c2b9de776bb11acdb23828466ab27d8f94e7))
+
+
+### Features
+
+* added support for granular template editor ([#13](https://github.com/storr/sdk-web/issues/13)) ([8af26ef](https://github.com/storr/sdk-web/commit/8af26ef79042005e52bbb7b63025390c96ed8baa))
+
 # [0.2.0](https://github.com/storr/sdk-web/compare/0.1.1...0.2.0) (2025-06-26)
 
 
