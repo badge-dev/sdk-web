@@ -25,8 +25,9 @@ export interface EmbedTemplatePageOptions {
 export function embedTemplatePage(
   sdk: BadgeSdk,
   element: HTMLElement,
-  {templateId, features, fonts, appearance}: EmbedTemplatePageOptions,
+  options: EmbedTemplatePageOptions,
 ): void {
+  const {templateId, features, fonts, appearance} = options;
   const {workspaceHandle, permissions} = parseTokenPayload(sdk.token);
 
   validatePermissions(permissions, REQUIRED_PERMISSIONS);
