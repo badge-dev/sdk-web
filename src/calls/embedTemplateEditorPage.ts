@@ -25,8 +25,9 @@ export interface EmbedTemplateEditorPageOptions {
 export function embedTemplateEditorPage(
   sdk: BadgeSdk,
   element: HTMLElement,
-  {templateId, features, fonts, appearance}: EmbedTemplateEditorPageOptions,
+  options: EmbedTemplateEditorPageOptions,
 ): void {
+  const {templateId, features, fonts, appearance} = options;
   const {workspaceHandle, permissions} = parseTokenPayload(sdk.token);
 
   validatePermissions(permissions, REQUIRED_PERMISSIONS);
@@ -57,37 +58,67 @@ const REQUIRED_PERMISSIONS: SdkPermission[][] = [
   ["template:write", "template:read"],
 ];
 
-export const TEMPLATE_EDITOR_FEATURES_DEFAULT = {
-  logo: true,
-  icon: true,
-  heading: true,
-  colors: true,
-  coverImage: true,
-  headerField: true,
-  secondaryFields: true,
+export const TEMPLATE_EDITOR_FEATURES_DEFAULT: Required<TemplateEditorFeatures> =
+  {
+    logo: true,
+    icon: true,
+    heading: true,
+    colors: true,
+    coverImage: true,
+    headerField: true,
+    secondaryFields: true,
+    barcodeType: false,
+    barcodeData: false,
+    barcodeText: false,
+    description: false,
+    backFields: true,
+    locationMessages: true,
+    appLinks: true,
+    expiry: false,
+  };
+
+export const TEMPLATE_EDITOR_FEATURES_NONE: Record<
+  TemplateEditorFeature,
+  false
+> = {
+  logo: false,
+  icon: false,
+  heading: false,
+  colors: false,
+  coverImage: false,
+  headerField: false,
+  secondaryFields: false,
   barcodeType: false,
   barcodeData: false,
   barcodeText: false,
   description: false,
-  backFields: true,
-  locationMessages: true,
-  appLinks: true,
+  backFields: false,
+  locationMessages: false,
+  appLinks: false,
   expiry: false,
-} satisfies Required<TemplateEditorFeatures>;
+};
 
-export const TEMPLATE_EDITOR_FEATURES_NONE = Object.fromEntries(
-  Object.keys(TEMPLATE_EDITOR_FEATURES_DEFAULT).map((key) => [key, false]),
-) as Record<TemplateEditorFeature, false>;
-
-export const TEMPLATE_EDITOR_FEATURES_ALL = Object.fromEntries(
-  Object.keys(TEMPLATE_EDITOR_FEATURES_DEFAULT).map((key) => [key, true]),
-) as Record<TemplateEditorFeature, true>;
+export const TEMPLATE_EDITOR_FEATURES_ALL: Record<TemplateEditorFeature, true> =
+  {
+    logo: true,
+    icon: true,
+    heading: true,
+    colors: true,
+    coverImage: true,
+    headerField: true,
+    secondaryFields: true,
+    barcodeType: true,
+    barcodeData: true,
+    barcodeText: true,
+    description: true,
+    backFields: true,
+    locationMessages: true,
+    appLinks: true,
+    expiry: true,
+  };
 
 export const TEMPLATE_EDITOR_FEATURES_ENABLE_BARCODE = {
   barcodeType: true,
   barcodeData: true,
   barcodeText: true,
-} satisfies Pick<
-  Record<TemplateEditorFeature, true>,
-  "barcodeType" | "barcodeData" | "barcodeText"
->;
+} satisfies TemplateEditorFeatures;
