@@ -8,6 +8,7 @@ import {
   ColorInput,
   Group,
   MultiSelect,
+  PasswordInput,
   Select,
   Stack,
   Switch,
@@ -227,7 +228,7 @@ export function Playground() {
       </AppShell.Header>
       <AppShell.Navbar p="md" styles={{navbar: {overflowY: "scroll"}}}>
         <Stack align="stretch" gap="md">
-          <TextInput
+          <PasswordInput
             label="API Key"
             value={settings.apiKey}
             onChange={(e) => {
