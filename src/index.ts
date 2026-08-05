@@ -19,6 +19,7 @@ export {
 } from "./helpers/embedFeatures.ts";
 export {
   type AppearanceConfig,
+  type AppearanceMode,
   type FontSource,
   type CssFontSource,
   type CustomFontSource,

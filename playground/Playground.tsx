@@ -31,6 +31,7 @@ interface Settings {
   editorFeatures?: badge.TemplateEditorFeatures;
   sdkPath: string;
   googleFont: string;
+  mode: badge.AppearanceMode;
   primaryColor: string;
   neutralColor: string;
   apiUrl: string;
@@ -64,7 +65,10 @@ export function Playground() {
   });
 
   const [appearanceVisible, setAppearanceVisible] = useState(
-    !!settings.googleFont || !!settings.primaryColor || !!settings.neutralColor,
+    !!settings.googleFont ||
+      settings.mode === "dark" ||
+      !!settings.primaryColor ||
+      !!settings.neutralColor,
   );
   const [urlsVisible, setUrlsVisible] = useState(false);
 
@@ -123,6 +127,7 @@ export function Playground() {
           : undefined;
 
         const appearance = {
+          mode: settings.mode,
           fontFamily: googleFont,
           colors: {
             primary: primaryColor,
@@ -301,6 +306,14 @@ export function Playground() {
           />
           <Collapse in={appearanceVisible}>
             <Stack align="stretch" gap="md">
+              <Select
+                label="Mode"
+                data={APPEARANCE_MODE_OPTIONS}
+                value={settings.mode}
+                onChange={(value) => {
+                  settingChanged("mode", value as badge.AppearanceMode);
+                }}
+              />
               <TextInput
                 label="Google Font"
                 value={settings.googleFont}
@@ -370,6 +383,12 @@ badge.${sdkCall.functionName}(sdk, element, ${JSON.stringify(sdkCall.options, nu
   );
 }
 
+const APPEARANCE_MODE_OPTIONS: {value: badge.AppearanceMode; label: string}[] =
+  [
+    {value: "light", label: "Light"},
+    {value: "dark", label: "Dark"},
+  ];
+
 const DEFAULT_SETTINGS: Settings = {
   apiKey: "",
   templateId: null,
@@ -389,6 +408,7 @@ const DEFAULT_SETTINGS: Settings = {
   editorFeatures: badge.TEMPLATE_EDITOR_FEATURES_DEFAULT,
   sdkPath: "",
   googleFont: "",
+  mode: "light",
   primaryColor: "",
   neutralColor: "",
   apiUrl: "https://api.trybadge.com",
