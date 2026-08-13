@@ -147,6 +147,7 @@ export function Playground() {
               appearance,
             };
             badge.embedTemplateEditorPage(sdk, element, options);
+            applyEmbedIframeAppearance(element, settings.mode);
             setSdkCall({
               sdkOptions,
               options,
@@ -162,6 +163,7 @@ export function Playground() {
               appearance,
             };
             badge.embedTemplatePage(sdk, element, options);
+            applyEmbedIframeAppearance(element, settings.mode);
             setSdkCall({
               sdkOptions,
               options,
@@ -388,6 +390,18 @@ const APPEARANCE_MODE_OPTIONS: {value: badge.AppearanceMode; label: string}[] =
     {value: "light", label: "Light"},
     {value: "dark", label: "Dark"},
   ];
+
+function applyEmbedIframeAppearance(
+  element: HTMLElement,
+  mode: badge.AppearanceMode,
+) {
+  const iframe = element.querySelector("iframe");
+  if (!iframe) {
+    return;
+  }
+  iframe.style.colorScheme = mode;
+  iframe.style.backgroundColor = mode === "dark" ? "#0A0A0A" : "transparent";
+}
 
 const DEFAULT_SETTINGS: Settings = {
   apiKey: "",
