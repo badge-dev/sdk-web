@@ -147,7 +147,6 @@ export function Playground() {
               appearance,
             };
             badge.embedTemplateEditorPage(sdk, element, options);
-            applyEmbedIframeAppearance(element, settings.mode);
             setSdkCall({
               sdkOptions,
               options,
@@ -163,7 +162,6 @@ export function Playground() {
               appearance,
             };
             badge.embedTemplatePage(sdk, element, options);
-            applyEmbedIframeAppearance(element, settings.mode);
             setSdkCall({
               sdkOptions,
               options,
@@ -217,6 +215,7 @@ export function Playground() {
   }, [handleApiKeyChange, settings.apiKey]);
 
   const sdkFunction = settings.sdkFunction;
+  const appearanceMode = sdkCall?.options.appearance?.mode ?? "light";
   return (
     <AppShell
       header={{height: 60}}
@@ -379,7 +378,14 @@ badge.${sdkCall.functionName}(sdk, element, ${JSON.stringify(sdkCall.options, nu
         ref={ref}
         h="100%"
         flex={1}
-        styles={{main: {overflowY: "hidden"}}}
+        styles={{
+          main: {
+            overflowY: "hidden",
+            colorScheme: appearanceMode,
+            backgroundColor:
+              appearanceMode === "dark" ? "#0A0A0A" : "transparent",
+          },
+        }}
       />
     </AppShell>
   );
@@ -390,18 +396,6 @@ const APPEARANCE_MODE_OPTIONS: {value: badge.AppearanceMode; label: string}[] =
     {value: "light", label: "Light"},
     {value: "dark", label: "Dark"},
   ];
-
-function applyEmbedIframeAppearance(
-  element: HTMLElement,
-  mode: badge.AppearanceMode,
-) {
-  const iframe = element.querySelector("iframe");
-  if (!iframe) {
-    return;
-  }
-  iframe.style.colorScheme = mode;
-  iframe.style.backgroundColor = mode === "dark" ? "#0A0A0A" : "transparent";
-}
 
 const DEFAULT_SETTINGS: Settings = {
   apiKey: "",
