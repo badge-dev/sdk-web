@@ -11,7 +11,7 @@
     "releaseName": "${version}"
   },
   "npm": {
-    "publishArgs": ["--access", "public"]
+    "stage": true
   },
   "plugins": {
     "@release-it/conventional-changelog": {
