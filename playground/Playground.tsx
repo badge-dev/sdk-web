@@ -381,9 +381,9 @@ badge.${sdkCall.functionName}(sdk, element, ${JSON.stringify(sdkCall.options, nu
         styles={{
           main: {
             overflowY: "hidden",
-            colorScheme: appearanceMode,
-            backgroundColor:
-              appearanceMode === "dark" ? "#0A0A0A" : "transparent",
+            backgroundColor: {dark: "#0A0A0A", light: undefined}[
+              appearanceMode
+            ],
           },
         }}
       />
