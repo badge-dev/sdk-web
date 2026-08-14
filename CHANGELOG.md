@@ -1,5 +1,11 @@
 # Changelog
 
+# [0.4.0](https://github.com/badge-dev/sdk-web/compare/0.3.0...0.4.0) (2026-08-14)
+
+### Features
+
+* add mode to the sdk appearance config ([#18](https://github.com/badge-dev/sdk-web/issues/18)) ([88d7174](https://github.com/badge-dev/sdk-web/commit/88d71745caaa9d26ed18a608d389a03c4b55f506)), closes [#19](https://github.com/badge-dev/sdk-web/issues/19)
+
 # [0.3.0](https://github.com/storr/sdk-web/compare/0.2.0...0.3.0) (2026-02-02)
 
 
