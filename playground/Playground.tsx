@@ -31,6 +31,7 @@ interface Settings {
   editorFeatures?: badge.TemplateEditorFeatures;
   sdkPath: string;
   googleFont: string;
+  mode: badge.AppearanceMode;
   primaryColor: string;
   neutralColor: string;
   apiUrl: string;
@@ -64,7 +65,10 @@ export function Playground() {
   });
 
   const [appearanceVisible, setAppearanceVisible] = useState(
-    !!settings.googleFont || !!settings.primaryColor || !!settings.neutralColor,
+    !!settings.googleFont ||
+      settings.mode === "dark" ||
+      !!settings.primaryColor ||
+      !!settings.neutralColor,
   );
   const [urlsVisible, setUrlsVisible] = useState(false);
 
@@ -123,6 +127,7 @@ export function Playground() {
           : undefined;
 
         const appearance = {
+          mode: settings.mode,
           fontFamily: googleFont,
           colors: {
             primary: primaryColor,
@@ -210,6 +215,7 @@ export function Playground() {
   }, [handleApiKeyChange, settings.apiKey]);
 
   const sdkFunction = settings.sdkFunction;
+  const appearanceMode = sdkCall?.options.appearance?.mode ?? "light";
   return (
     <AppShell
       header={{height: 60}}
@@ -301,6 +307,14 @@ export function Playground() {
           />
           <Collapse in={appearanceVisible}>
             <Stack align="stretch" gap="md">
+              <Select
+                label="Mode"
+                data={APPEARANCE_MODE_OPTIONS}
+                value={settings.mode}
+                onChange={(value) => {
+                  settingChanged("mode", value as badge.AppearanceMode);
+                }}
+              />
               <TextInput
                 label="Google Font"
                 value={settings.googleFont}
@@ -364,11 +378,24 @@ badge.${sdkCall.functionName}(sdk, element, ${JSON.stringify(sdkCall.options, nu
         ref={ref}
         h="100%"
         flex={1}
-        styles={{main: {overflowY: "hidden"}}}
+        styles={{
+          main: {
+            overflowY: "hidden",
+            backgroundColor: {dark: "#0A0A0A", light: undefined}[
+              appearanceMode
+            ],
+          },
+        }}
       />
     </AppShell>
   );
 }
+
+const APPEARANCE_MODE_OPTIONS: {value: badge.AppearanceMode; label: string}[] =
+  [
+    {value: "light", label: "Light"},
+    {value: "dark", label: "Dark"},
+  ];
 
 const DEFAULT_SETTINGS: Settings = {
   apiKey: "",
@@ -389,6 +416,7 @@ const DEFAULT_SETTINGS: Settings = {
   editorFeatures: badge.TEMPLATE_EDITOR_FEATURES_DEFAULT,
   sdkPath: "",
   googleFont: "",
+  mode: "light",
   primaryColor: "",
   neutralColor: "",
   apiUrl: "https://api.trybadge.com",

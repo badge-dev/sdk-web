@@ -67,11 +67,10 @@ badge.embedTemplatePage(
 
 There are various features that can be enabled by setting attributes in
 `features`. Additional details can be found in the
-[SDK config doc](https://docs.trybadge.com/docs/sdk-config-embed#badge-features).
+[SDK config doc](https://docs.trybadge.com/docs/embed-template-editor-page#features).
 
 The appearance of the embed can also be customized. Additional details can be
-found in the
-[SDK config doc](https://docs.trybadge.com/docs/sdk-config-embed#appearance).
+found in the [SDK config doc](https://docs.trybadge.com/docs/styling-the-embed).
 
 ## License
 
