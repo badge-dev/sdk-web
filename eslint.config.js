@@ -1,5 +1,5 @@
 import eslint from "@eslint/js";
-import importPlugin from "eslint-plugin-import";
+import importPlugin from "eslint-plugin-import-x";
 import noOnlyTests from "eslint-plugin-no-only-tests";
 import prettier from "eslint-plugin-prettier/recommended";
 import reactPlugin from "eslint-plugin-react";
@@ -80,8 +80,6 @@ export default tseslint.config(
         },
       ],
 
-      "react/jsx-no-target-blank": "off",
-      "react/prop-types": "off",
       "unicorn/explicit-length-check": "error",
       "unicorn/no-lonely-if": "error",
       "unicorn/no-typeof-undefined": "error",
@@ -102,15 +100,16 @@ export default tseslint.config(
   },
   {
     files: ["playground/**"],
-    ...reactPlugin.configs.flat.recommended,
-    ...reactPlugin.configs.flat["jsx-runtime"],
-    ...reactHooks.configs.recommended,
     plugins: {
       react: reactPlugin,
       "react-hooks": reactHooks,
     },
     rules: {
+      ...reactPlugin.configs.flat.recommended.rules,
+      ...reactPlugin.configs.flat["jsx-runtime"].rules,
       ...reactHooks.configs.recommended.rules,
+      "react/jsx-no-target-blank": "off",
+      "react/prop-types": "off",
       "react-hooks/exhaustive-deps": ["error"],
     },
   },
