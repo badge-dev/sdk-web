@@ -1,4 +1,3 @@
-import * as badge from "@badge-sdk/web";
 import {
   AppShell,
   Burger,
@@ -21,6 +20,7 @@ import {
   useLocalStorage,
 } from "@mantine/hooks";
 import {useEffect, useRef, useState} from "react";
+import * as badge from "@badge-sdk/web";
 
 interface Settings {
   apiKey: string;
