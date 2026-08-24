@@ -4,5 +4,10 @@
     "lib": ["ES2020", "DOM"],
     "types": ["node", "@total-typescript/ts-reset"]
   },
-  "include": ["eslint.config.js", "vite.config.ts"]
+  "include": [
+    "eslint.config.js",
+    "vite.config.ts",
+    "playground/vite.config.ts"
+  ],
+  "exclude": []
 }

@@ -30,5 +30,6 @@
     },
     "types": ["@total-typescript/ts-reset"]
   },
-  "include": ["src", "playground"]
+  "include": ["src", "playground"],
+  "exclude": ["playground/vite.config.ts"]
 }
