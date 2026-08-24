@@ -1,4 +1,4 @@
-import {z} from "@zod/mini";
+import {z} from "zod/mini";
 import {sdkPermissionSchema} from "./permissions.ts";
 
 export function parseTokenPayload(token: string): SdkTokenPayload {

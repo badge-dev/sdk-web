@@ -117,7 +117,7 @@ export default tseslint.config(
   {
     files: ["src/**"],
     rules: {
-      "import/extensions": ["error", "always"],
+      "import/extensions": ["error", "ignorePackages"],
     },
   },
 );
