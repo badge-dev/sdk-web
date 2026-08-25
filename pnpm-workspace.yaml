@@ -1,4 +1,13 @@
 trustLockfile: true
 
+overrides:
+  "@babel/runtime@7": ^7.26.10
+  brace-expansion@1: ^1.1.18
+  flatted@3: ^3.4.4
+  js-yaml@4: ^4.3.1
+  minimatch@3: ^3.1.5
+  picomatch@2: ^2.3.2
+  socks@2: ^2.8.9
+
 allowBuilds:
   unrs-resolver: false
