@@ -75,8 +75,7 @@ export function Playground() {
   const [sdkCall, setSdkCall] = useState<{
     sdkOptions: badge.SdkOptions;
     options:
-      | badge.EmbedTemplatePageOptions
-      | badge.EmbedTemplateEditorPageOptions;
+      badge.EmbedTemplatePageOptions | badge.EmbedTemplateEditorPageOptions;
     functionName: SdkFunction;
   }>();
 
