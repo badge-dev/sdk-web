@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.4.1](https://github.com/badge-dev/sdk-web/compare/0.4.0...0.4.1) (2026-08-25)
+
 # [0.4.0](https://github.com/badge-dev/sdk-web/compare/0.3.0...0.4.0) (2026-08-14)
 
 ### Features
