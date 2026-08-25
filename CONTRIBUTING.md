@@ -32,6 +32,13 @@ After staging changes, commits can be authored using commitizen:
 pnpm commit
 ```
 
+CI validates every commit on a branch against this standard. The same check can
+be run locally with:
+
+```sh
+pnpm commitlint
+```
+
 ## Release
 
 This package uses [ReleaseIt](https://github.com/release-it/release-it) to

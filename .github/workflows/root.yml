@@ -7,11 +7,14 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4.0.0
       - uses: actions/setup-node@v4
         with:
           node-version-file: package.json
           cache: pnpm
       - run: pnpm i
+      - run: pnpm run commitlint
       - run: pnpm run check
       - run: pnpm run build
