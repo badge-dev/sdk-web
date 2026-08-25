@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/storr/sdk-web/issues"
   },
-  "repository": "github:storr/sdk-web/",
+  "repository": "github:badge-dev/sdk-web",
   "type": "module",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
