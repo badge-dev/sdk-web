@@ -1,0 +1,4 @@
+trustLockfile: true
+
+allowBuilds:
+  unrs-resolver: false
